@@ -6,144 +6,108 @@ BookSeeks is a command-line interface (CLI) based personal books management syst
 
 ## Technical Stack
 
-- **Language**: C++
-- **Database**: SQLite3
-- **UI**: CLI with beautification libraries
-  - Possible libraries: [ncurses](https://invisible-island.net/ncurses/), [ftxui](https://github.com/ArthurSonzogni/FTXUI), or [termcolor](https://github.com/ikalnytskyi/termcolor)
+-   **Language**: C++
+-   **Database**: SQLite3
+-   **UI**: CLI with beautification libraries
+    -   Possible libraries: [ncurses](https://invisible-island.net/ncurses/), [ftxui](https://github.com/ArthurSonzogni/FTXUI), or [termcolor](https://github.com/ikalnytskyi/termcolor)
 
 ## Features
 
 ### User Authentication
 
-- User registration system with username and password
-- Secure login mechanism
-- Password encryption
+-   User registration system with username and password
+-   Secure login mechanism
+-   Password encryption
 
 ### Core Book Management
 
-- Add new books with details:
-  - Title, author(s), publisher
-  - Publication date
-  - Page count, genre/category
-  - Format (hardcover, paperback, e-book, audiobook)
-- Edit book information
-- Delete books
-- Search and filter books by various attributes
-- View detailed information about a specific book
+-   Add new books with details:
+    -   Title, author(s), publisher
+    -   Publication date
+    -   Page count, genre/category
+    -   Format (hardcover, paperback, e-book, audiobook)
+-   Edit book information
+-   Delete books
+-   Search and filter books by various attributes
+-   View detailed information about a specific book
 
 ### Book Organization
 
-- Create and manage custom bookshelves/collections
-- Sort books by different attributes
-- Organize books by genre, author, series, etc.
+-   Create and manage custom bookshelves/collections
+-   Sort books by different attributes
+-   Organize books by genre, author, series, etc.
 
 ### Reading Progress Tracking
 
-- Mark books as: "To Read," "Currently Reading," "Completed", "Not Interested"
-- Set and track reading goals (weekly, monthly)
-- Record start and finish dates
+-   Mark books as: "To Read," "Currently Reading," "Completed", "Not Interested"
+-   Set and track reading goals (weekly, monthly)
+-   Record start and finish dates
 
 ### AI-Based Book Recommendation System
 
-- Generate personalized book recommendations based on reading history
-- Content-based filtering using book attributes (genre, author, themes)
-- Collaborative filtering based on similar user preferences
-- Discover new authors and genres based on reading patterns
-- "Books you might like" feature
+-   Generate personalized book recommendations based on reading history
+-   Content-based filtering using book attributes (genre, author, themes)
+-   Collaborative filtering based on similar user preferences
+-   Discover new authors and genres based on reading patterns
+-   "Books you might like" feature
 
 ### Personal Insights
 
-- Rate books on a customizable scale
-- Write and store personal reviews/notes
-- Track reading statistics (books read per month/year, pages read, etc.)
+-   Rate books on a customizable scale
+-   Write and store personal reviews/notes
+-   Track reading statistics (books read per month/year, pages read, etc.)
 
 ### Library Management
 
-- Track physical location of books (which shelf/room)
-- Manage book lending (lent to whom, when, return date)
-- Track borrowed books
-- Wishlist for books you want to acquire
-- Track book purchases (price, where purchased, date)
+-   Track physical location of books (which shelf/room)
+-   Manage book lending (lent to whom, when, return date)
+-   Track borrowed books
+-   Wishlist for books you want to acquire
+-   Track book purchases (price, where purchased, date)
 
 ## Implementation Tasks
 
 ### Phase 1: Core Setup and Basic Functionality
 
-- [ ] Set up the C++ project structure
-- [ ] Implement SQLite3 database connectivity
-- [ ] Create database schema for books and users
-- [ ] Implement user registration and login system
-- [ ] Create basic CLI interface
-- [ ] Implement core CRUD operations for books
+-   [ ] Set up the C++ project structure
+-   [ ] Implement SQLite3 database connectivity
+-   [ ] Create database schema for books and users
+-   [ ] Implement user registration and login system
+-   [ ] Create basic CLI interface
+-   [ ] Implement core CRUD operations for books
 
 ### Phase 2: Advanced Book Management
 
-- [ ] Implement search and filter functionality
-- [ ] Add book categorization and tagging
-- [ ] Develop reading progress tracking
-- [ ] Create rating and review system
+-   [ ] Implement search and filter functionality
+-   [ ] Add book categorization and tagging
+-   [ ] Develop reading progress tracking
+-   [ ] Create rating and review system
 
 ### Phase 3: Enhanced Features
 
-- [ ] Implement bookshelves and collections
-- [ ] Add lending/borrowing tracking
-- [ ] Create wishlist functionality
-- [ ] Implement reading goals and tracking
-- [ ] Design and implement AI recommendation algorithm
+-   [ ] Implement bookshelves and collections
+-   [ ] Add lending/borrowing tracking
+-   [ ] Create wishlist functionality
+-   [ ] Implement reading goals and tracking
+-   [ ] Design and implement AI recommendation algorithm
 
 ### Phase 4: Data and UI Enhancements
 
-- [ ] Enhance CLI with better visualization and colors
-- [ ] Add interactive menus and keyboard shortcuts
+-   [ ] Enhance CLI with better visualization and colors
+-   [ ] Add interactive menus and keyboard shortcuts
 
 ### Phase 5: Final Polishing
 
-- [ ] Optimize performance
-- [ ] Optimzize UI for better user experience
-- [ ] Perform testing and bug fixes
-
-## Project Structure
-
-```
-bookseeks/
-├── src/
-│   ├── main.cpp
-│   │   └── main.h
-│   ├── database/
-│   │   ├── db_manager.cpp
-│   │   └── db_manager.h
-│   ├── models/
-│   │   ├── book.cpp
-│   │   └── book.h
-│   │   ├── user.cpp
-│   │   └── user.h
-│   ├── controllers/
-│   │   ├── book_controller.cpp
-│   │   └── book_controller.h
-│   │   ├── user_controller.cpp
-│   │   └── user_controller.h
-│   │   ├── auth_controller.cpp
-│   │   └── auth_controller.h
-│   │   ├── recommendation_controller.cpp
-│   │   └── recommendation_controller.h
-│   └── ui/
-│       ├── cli_manager.cpp
-│       └── cli_manager.h
-├── include/
-│   └── external libraries
-├── data/
-│   └── books.db
-├── tests/
-├── CMakeLists.txt
-└── README.md
-```
+-   [ ] Optimize performance
+-   [ ] Optimzize UI for better user experience
+-   [ ] Perform testing and bug fixes
 
 ## Setup Instructions
 
 1. Install required dependencies:
-   - C++ compiler (GCC/G++ or Clang)
-   - SQLite3 development libraries
-   - Required CLI libraries
+    - C++ compiler (GCC/G++ or Clang)
+    - SQLite3 development libraries
+    - Required CLI libraries
 2. Clone the repository
 3. Build the project using CMake
 4. Run the application
