@@ -85,7 +85,6 @@ BookSeeks is a command-line interface (CLI) based personal books management syst
 
 ### Phase 3: Enhanced Features
 
--   [ ] Implement bookshelves and collections
 -   [ ] Add lending/borrowing tracking
 -   [ ] Create wishlist functionality
 -   [ ] Implement reading goals and tracking

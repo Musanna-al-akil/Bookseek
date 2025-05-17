@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "user.h"
+#include "services/users.cpp"
 
 using namespace std;
 
@@ -31,11 +31,11 @@ void displayLoggedInMenu() {
 
 
 int main() {
-    // // Database db("bookseeks.db");
-    // if (!db.initialize()) {
-    //     cerr << "Failed to initialize database.\n";
-    //     return 1;
-    // }
+    // initialize Database with absolute path
+    const string dbFile = "db/users.bin";
+    cout << "Using database file: " << dbFile << endl;
+    
+    UserService db(dbFile);
 
     int choice = 0;
     string username, password, title, author;
@@ -61,7 +61,7 @@ int main() {
                     getline(cin, username);
                     cout << "Enter password: ";
                     getline(cin, password);
-                    if (db.registerUser(username, password)) {
+                    if (db.addUser(username, password)) {
                         cout << "Registration successful!\n";
                     } else {
                         cout << "Registration failed. Username might already exist.\n";
@@ -75,7 +75,7 @@ int main() {
                     getline(cin, username);
                     cout << "Enter password: ";
                     getline(cin, password);
-                    if (db.loginUser(username, password, currentUser)) {
+                    if (db.authenticateUser(username, password)) {
                         cout << "Login successful! Welcome, " << username << "!\n";
                         loggedIn = true;
                     } else {
@@ -90,40 +90,41 @@ int main() {
                 default:
                     cout << "Invalid choice. Please try again.\n";
             }
-        } else {
-            // User is logged in, show logged-in menu
-            displayLoggedInMenu();
-            cin >> choice;
-            cin.ignore(); 
-
-            switch (choice) {
-                case 1: // Add book
-                    cout << "Enter book title: ";
-                    break;
-                    
-                case 2: // View all books
-                    // db.viewAllBooks(currentUser.id);
-                    cout << "Viewing all books...\n";
-                    break;
-                    
-                case 3: // Search for a book
-                    cout << "Enter search term: ";
-                    break;
-                    
-                case 4: // Logout
-                    cout << "Logging out...\n";
-                    loggedIn = false;
-                    currentUser = User();
-                    break;
-                    
-                case 5: // Exit
-                    cout << "Thank you for using BookSeeks. Goodbye!\n";
-                    return 0;
-                    
-                default:
-                    cout << "Invalid choice. Please try again.\n";
-            }
         }
+        // } else {
+        //     // User is logged in, show logged-in menu
+        //     displayLoggedInMenu();
+        //     cin >> choice;
+        //     cin.ignore(); 
+
+        //     switch (choice) {
+        //         case 1: // Add book
+        //             cout << "Enter book title: ";
+        //             break;
+                    
+        //         case 2: // View all books
+        //             // db.viewAllBooks(currentUser.id);
+        //             cout << "Viewing all books...\n";
+        //             break;
+                    
+        //         case 3: // Search for a book
+        //             cout << "Enter search term: ";
+        //             break;
+                    
+        //         case 4: // Logout
+        //             cout << "Logging out...\n";
+        //             loggedIn = false;
+        //             currentUser = User();
+        //             break;
+                    
+        //         case 5: // Exit
+        //             cout << "Thank you for using BookSeeks. Goodbye!\n";
+        //             return 0;
+                    
+        //         default:
+        //             cout << "Invalid choice. Please try again.\n";
+        //     }
+        // }
     }
 
     return 0;
