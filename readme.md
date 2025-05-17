@@ -69,11 +69,11 @@ BookSeeks is a command-line interface (CLI) based personal books management syst
 
 ### Phase 1: Core Setup and Basic Functionality
 
--   [ ] Set up the C++ project structure
--   [ ] Implement SQLite3 database connectivity
--   [ ] Create database schema for books and users
--   [ ] Implement user registration and login system
--   [ ] Create basic CLI interface
+-   [x] Set up the C++ project structure
+-   [x] Implement SQLite3 database connectivity
+-   [x] Create database schema for books and users
+-   [x] Implement user registration and login system
+-   [x] Create basic CLI interface
 -   [ ] Implement core CRUD operations for books
 
 ### Phase 2: Advanced Book Management

@@ -17,15 +17,11 @@ bool Database::initialize() {
         return false;
     }
     
-    // The actual schema creation is done separately in the schema.sql file
-    // This function just checks if we can connect to the database
     return true;
 }
 
 bool Database::registerUser(const std::string& username, const std::string& password) {
-    // Simple implementation without proper hashing for demo purposes
-    // In a real application, password should be properly hashed
-    
+
     // First check if user already exists
     sqlite3_stmt* stmt;
     std::string sql = "SELECT COUNT(*) FROM users WHERE username = ?";

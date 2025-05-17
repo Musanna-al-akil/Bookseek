@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include "user.h"
-#include "database.h"
 
 using namespace std;
 
@@ -10,7 +9,7 @@ void clearScreen() {
 }
 
 void displayMenu() {
-    clearScreen();
+    // clearScreen();
     cout << "\n===== BookSeeks: Personal Books Management System =====\n";
     cout << "1. Register new user\n";
     cout << "2. Login\n";
@@ -18,9 +17,8 @@ void displayMenu() {
     cout << "Enter your choice: ";
 }
 
-// Display menu for logged-in users
 void displayLoggedInMenu() {
-    clearScreen();
+    // clearScreen();
     cout << "\n===== BookSeeks: User Menu =====\n";
     cout << "1. Add new book\n";
     cout << "2. View all books\n";
@@ -33,11 +31,11 @@ void displayLoggedInMenu() {
 
 
 int main() {
-    Database db("bookseeks.db");
-    if (!db.initialize()) {
-        cerr << "Failed to initialize database.\n";
-        return 1;
-    }
+    // // Database db("bookseeks.db");
+    // if (!db.initialize()) {
+    //     cerr << "Failed to initialize database.\n";
+    //     return 1;
+    // }
 
     int choice = 0;
     string username, password, title, author;
@@ -57,7 +55,7 @@ int main() {
 
             switch (choice) {
                 case 1: // Register
-                    clearScreen();
+                    // clearScreen();
                     cout << "~~~~~~~   Register   ~~~~~~~\n";
                     cout << "Enter username: ";
                     getline(cin, username);
@@ -71,7 +69,7 @@ int main() {
                     break;
                     
                 case 2: // Login
-                    clearScreen();
+                    // clearScreen();
                     cout << "~~~~~~~   Login   ~~~~~~~\n";
                     cout << "Enter username: ";
                     getline(cin, username);
@@ -85,7 +83,7 @@ int main() {
                     }
                     break;
                     
-                case 3: // Exit
+                case 3: 
                     cout << "Thank you for using BookSeeks. Goodbye!\n";
                     return 0;
                     
@@ -96,7 +94,7 @@ int main() {
             // User is logged in, show logged-in menu
             displayLoggedInMenu();
             cin >> choice;
-            cin.ignore(); // Clear newline from buffer
+            cin.ignore(); 
 
             switch (choice) {
                 case 1: // Add book
@@ -115,7 +113,7 @@ int main() {
                 case 4: // Logout
                     cout << "Logging out...\n";
                     loggedIn = false;
-                    currentUser = User(); // Reset user
+                    currentUser = User();
                     break;
                     
                 case 5: // Exit
