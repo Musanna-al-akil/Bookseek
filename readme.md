@@ -7,7 +7,7 @@ BookSeeks is a command-line interface (CLI) based personal books management syst
 ## Technical Stack
 
 -   **Language**: C++
--   **Database**: SQLite3
+-   **Database**: binary file
 -   **UI**: CLI with beautification libraries
     -   Possible libraries: [ncurses](https://invisible-island.net/ncurses/), [ftxui](https://github.com/ArthurSonzogni/FTXUI), or [termcolor](https://github.com/ikalnytskyi/termcolor)
 

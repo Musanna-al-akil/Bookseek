@@ -90,41 +90,40 @@ int main() {
                 default:
                     cout << "Invalid choice. Please try again.\n";
             }
-        }
-        // } else {
-        //     // User is logged in, show logged-in menu
-        //     displayLoggedInMenu();
-        //     cin >> choice;
-        //     cin.ignore(); 
+        }else {
+            // User is logged in, show logged-in menu
+            displayLoggedInMenu();
+            cin >> choice;
+            cin.ignore(); 
 
-        //     switch (choice) {
-        //         case 1: // Add book
-        //             cout << "Enter book title: ";
-        //             break;
+            switch (choice) {
+                case 1: // Add book
+                    cout << "Enter book title: ";
+                    break;
                     
-        //         case 2: // View all books
-        //             // db.viewAllBooks(currentUser.id);
-        //             cout << "Viewing all books...\n";
-        //             break;
+                case 2: // View all books
+                    // db.viewAllBooks(currentUser.id);
+                    cout << "Viewing all books...\n";
+                    break;
                     
-        //         case 3: // Search for a book
-        //             cout << "Enter search term: ";
-        //             break;
+                case 3: // Search for a book
+                    cout << "Enter search term: ";
+                    break;
                     
-        //         case 4: // Logout
-        //             cout << "Logging out...\n";
-        //             loggedIn = false;
-        //             currentUser = User();
-        //             break;
+                case 4: // Logout
+                    cout << "Logging out...\n";
+                    loggedIn = false;
+                    currentUser = User();
+                    break;
                     
-        //         case 5: // Exit
-        //             cout << "Thank you for using BookSeeks. Goodbye!\n";
-        //             return 0;
+                case 5: // Exit
+                    cout << "Thank you for using BookSeeks. Goodbye!\n";
+                    return 0;
                     
-        //         default:
-        //             cout << "Invalid choice. Please try again.\n";
-        //     }
-        // }
+                default:
+                    cout << "Invalid choice. Please try again.\n";
+            }
+        }
     }
 
     return 0;
