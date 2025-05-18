@@ -55,8 +55,6 @@ class UserService {
             strcpy(user.username, username.c_str());
             strcpy(user.password, password.c_str());
             user.created_at = time(nullptr);
-
-            cout << "User created: " << user.id << " " << user.username << " " << user.password << " " << user.created_at << endl;
             
             // Write to file - open in append mode
             ofstream outFile(filename, ios::app | ios::binary);
@@ -67,8 +65,6 @@ class UserService {
             
             outFile.write(reinterpret_cast<const char*>(&user), sizeof(User));
             outFile.close();
-            
-            cout << "User written to file successfully" << endl;
             return true;
         }
 
