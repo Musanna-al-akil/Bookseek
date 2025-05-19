@@ -3,11 +3,13 @@
 #include <chrono>
 #include <thread>
 #include "services/users.cpp"
+#include "services/book.cpp"
 
 using namespace std;
 
 //db name
-const string dbFile = "db/users.bin";
+const string userFile = "db/users.bin";
+const string bookFile = "db/books.bin";
 
 // color code
 namespace Color {
@@ -110,8 +112,9 @@ void displayLoggedInMenu() {
     cout << "1. Add new book\n";
     cout << "2. View all books\n";
     cout << "3. Search for a book\n";
-    cout << "4. Logout\n";
-    cout << "5. Exit\n";
+    cout << "4. Delete a book\n";
+    cout << "5. Logout\n";
+    cout << "6. Exit\n";
     cout << "Enter your choice: ";
 }
 
@@ -119,7 +122,8 @@ void displayLoggedInMenu() {
 
 int main() {
     // initialize db
-    UserService db(dbFile);
+    UserService db(userFile);
+    BookService book(bookFile);
 
     int choice = 0;
     string username, password, title, author;
@@ -155,10 +159,13 @@ int main() {
                 case 2: // Login
                     clearScreen();
                     cout << "~~~~~~~   Login   ~~~~~~~\n";
+
                     cout << "Enter username: ";
                     getline(cin, username);
+
                     cout << "Enter password: ";
                     getline(cin, password);
+
                     if (db.authenticateUser(username, password)) {
                         showNotification("Login successful! Welcome, " + username, SUCCESS);
                         loggedIn = true;
@@ -177,37 +184,71 @@ int main() {
                     displayMenu();
             }
         } else {
-            // User is logged in, show logged-in menu
+            // User is logged in
             displayLoggedInMenu();
             cin >> choice;
             cin.ignore(); 
 
+           
             switch (choice) {
-                case 1: // Add book
-                    cout << "Enter book title: ";
+                case 1: 
+                    // Add book
+                    clearScreen();
+                    if(book.addBook()){
+                         clearScreen();
+                        showNotification("Book added successfully!", SUCCESS);
+                    }else{
+                         clearScreen(); 
+                        showNotification("Book already exists", ERROR);
+                    }
+
                     break;
                     
                 case 2: // View all books
-                    // db.viewAllBooks(currentUser.id);
-                    cout << "Viewing all books...\n";
+                    clearScreen();
+                    cout << "~~~~~~~  Viewing all books  ~~~~~~~\n";
+                    book.viewBooks();
+                    cout << "\nPress Enter to return to menu...";
+                    cin.ignore();
                     break;
                     
                 case 3: // Search for a book
-                    cout << "Enter search term: ";
+                    clearScreen();
+                    cout << "~~~~~~~  Search for a book  ~~~~~~~\n";
+                    book.searchBooks();
+                    cout << "\nPress Enter to return to menu...";
+                    cin.ignore();
                     break;
                     
-                case 4: // Logout
+                case 4: // Delete a book
+                    clearScreen();
+                    cout << "~~~~~~~  Delete a book  ~~~~~~~\n";
+                    if(book.deleteBook()){
+                        clearScreen();
+                        showNotification("Book deleted successfully!", SUCCESS);
+                        displayLoggedInMenu();
+                    }else{
+                        clearScreen();
+                        showNotification("Book not found", ERROR);
+                        displayLoggedInMenu();
+                    }
+                    break;
+                case 5: // Logout
+                 clearScreen();
                     cout << "Logging out...\n";
                     loggedIn = false;
                     currentUser = User();
                     break;
                     
-                case 5: // Exit
-                    cout << "Thank you for using BookSeeks. Goodbye!\n";
+                case 6: // Exit
+                 clearScreen();
+                    cout << "Thank you for using BookSeek. Goodbye!\n";
                     return 0;
                     
                 default:
-                    cout << "Invalid choice. Please try again.\n";
+                 clearScreen();
+                showNotification("Invalid option selected", WARNING);
+                displayMenu();
             }
         }
     }
