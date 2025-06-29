@@ -11,6 +11,11 @@ struct Book {
     char title[50];
     char author[50];
     char lend_to[50];
+    bool isLent;
+    char lent_to[50];
+    bool isBorrowed;
+    char borrowed_from[50];
+    bool isWishlist;
     int year;
 };
 

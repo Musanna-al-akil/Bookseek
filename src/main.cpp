@@ -2,14 +2,8 @@
 #include <string>
 #include <chrono>
 #include <thread>
-#include "services/users.cpp"
-#include "services/book.cpp"
 
 using namespace std;
-
-//db name
-const string userFile = "db/users.bin";
-const string bookFile = "db/books.bin";
 
 // color code
 namespace Color {
@@ -97,6 +91,15 @@ void showNotification(const string& message, NotificationType type, int displayT
     cout.flush();
 }
 
+// Include service files
+#include "services/users.cpp"
+#include "services/book.cpp"
+#include "services/wishlist-lend.cpp"
+
+//db name
+const string userFile = "db/users.bin";
+const string bookFile = "db/books.bin";
+
 void displayMenu() {
     clearScreen();
     cout << "\n===== BookSeeks: Personal Books Management System =====\n";
@@ -113,8 +116,9 @@ void displayLoggedInMenu() {
     cout << "2. View all books\n";
     cout << "3. Search for a book\n";
     cout << "4. Delete a book\n";
-    cout << "5. Logout\n";
-    cout << "6. Exit\n";
+    cout << "5. Wishlist & Lend\n";
+    cout << "6. Logout\n";
+    cout << "7. Exit\n";
     cout << "Enter your choice: ";
 }
 
@@ -124,6 +128,7 @@ int main() {
     // initialize db
     UserService db(userFile);
     BookService book(bookFile);
+    WishlistLendService wishlistLend(bookFile);
 
     int choice = 0;
     string username, password, title, author;
@@ -232,14 +237,22 @@ int main() {
                         displayLoggedInMenu();
                     }
                     break;
-                case 5: // Logout
+                case 5: // Wishlist & Lend
+                    clearScreen();
+                    if (wishlistLend.wishlistLendMenu()) {
+                        clearScreen();
+                        cout << "Thank you for using BookSeek. Goodbye!\n";
+                        return 0;
+                    }
+                    break;
+                case 6: // Logout
                  clearScreen();
                     cout << "Logging out...\n";
                     loggedIn = false;
                     currentUser = User();
                     break;
                     
-                case 6: // Exit
+                case 7: // Exit
                  clearScreen();
                     cout << "Thank you for using BookSeek. Goodbye!\n";
                     return 0;
