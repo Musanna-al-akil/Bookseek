@@ -55,7 +55,7 @@ void showNotification(const string& message, NotificationType type, int displayT
             break;
         case ERROR:
             bgColor = Color::BG_RED;
-            textColor = Color::WHITE;
+
             prefix = "✗ ERROR: ";
             break;
         case INFO:
@@ -88,7 +88,7 @@ void showNotification(const string& message, NotificationType type, int displayT
     
     // display how many seconds
     cout.flush();
-    this_thread::sleep_for(chrono::seconds(displayTime));
+    std::this_thread::sleep_for(std::chrono::seconds(displayTime));
     
     // Clear notification
     cout << "\033[1;1H\033[K\n\033[K\n\033[K";
@@ -129,7 +129,6 @@ int main() {
     string username, password, title, author;
     User currentUser;
     bool loggedIn = false;
-    // Book newBook;
 
     clearScreen();
 
@@ -139,7 +138,7 @@ int main() {
         if (!loggedIn) {
             displayMenu();
             cin >> choice;
-            cin.ignore(); // Clear newline from buffer
+            cin.ignore(); 
 
             switch (choice) {
                 case 1: // Register
@@ -212,7 +211,7 @@ int main() {
                     cin.ignore();
                     break;
                     
-                case 3: // Search for a book
+                case 3: // Search book
                     clearScreen();
                     cout << "~~~~~~~  Search for a book  ~~~~~~~\n";
                     book.searchBooks();
@@ -220,7 +219,7 @@ int main() {
                     cin.ignore();
                     break;
                     
-                case 4: // Delete a book
+                case 4: // Delete book
                     clearScreen();
                     cout << "~~~~~~~  Delete a book  ~~~~~~~\n";
                     if(book.deleteBook()){

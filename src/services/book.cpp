@@ -10,6 +10,7 @@ struct Book {
     int id;
     char title[50];
     char author[50];
+    char lend_to[50];
     int year;
 };
 
@@ -40,7 +41,6 @@ class BookService {
             idFile.close();
         }
         
-        // Auto-increment ID
         book.id = maxId + 1;
 
         string temp;
@@ -130,7 +130,7 @@ class BookService {
             string titleStr(book.title);
             string authorStr(book.author);
 
-            // Convert to lowercase for case-insensitive search
+            // Convert to lowercase 
             string titleLower = titleStr;
             string authorLower = authorStr;
             string termLower = term;

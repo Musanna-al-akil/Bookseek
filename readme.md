@@ -19,7 +19,6 @@ cd src && g++ -o Bookseek main.cpp services/users.cpp services/book.cpp
 -   **Language**: C++
 -   **Database**: binary file
 -   **UI**: CLI with beautification libraries
-    -   Possible libraries: [ncurses](https://invisible-island.net/ncurses/), [ftxui](https://github.com/ArthurSonzogni/FTXUI), or [termcolor](https://github.com/ikalnytskyi/termcolor)
 
 ## Features
 
@@ -115,7 +114,6 @@ cd src && g++ -o Bookseek main.cpp services/users.cpp services/book.cpp
 
 1. Install required dependencies:
     - C++ compiler (GCC/G++ or Clang)
-    - SQLite3 development libraries
     - Required CLI libraries
 2. Clone the repository
 3. Build the project using CMake
