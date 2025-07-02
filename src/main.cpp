@@ -30,8 +30,11 @@ void displayLoggedInMenu() {
     cout << "3. Search for a book\n";
     cout << "4. Delete a book\n";
     cout << "5. Wishlist & Lend\n";
-    cout << "6. Logout\n";
-    cout << "7. Exit\n";
+    cout << "6. Filter books by category\n";
+    cout << "7. Update reading status\n";
+    cout << "8. Add rating and review\n";
+    cout << "9. Logout\n";
+    cout << "10. Exit\n";
     cout << "Enter your choice: ";
 }
 
@@ -160,7 +163,28 @@ int main() {
                         return 0;
                     }
                     break;
-                case 6: // Logout
+                case 6: // Filter books by category
+                    clearScreen();
+                    cout << "~~~~~~~  Filter books by category  ~~~~~~~\n";
+                    book.filterByCategory();
+                    cout << "\nPress Enter to return to menu...";
+                    cin.ignore();
+                    break;
+                case 7: // Update reading status
+                    clearScreen();
+                    cout << "~~~~~~~  Update reading status  ~~~~~~~\n";
+                    book.updateProgress();
+                    cout << "\nPress Enter to return to menu...";
+                    cin.ignore();
+                    break;
+                case 8: // Add rating and review
+                    clearScreen();
+                    cout << "~~~~~~~  Add rating and review  ~~~~~~~\n";
+                    book.addRatingReview();
+                    cout << "\nPress Enter to return to menu...";
+                    cin.ignore();
+                    break;
+                case 9: // Logout
                     clearScreen();
                  
                     cout << "Logging out...\n";
@@ -168,7 +192,7 @@ int main() {
                     currentUser = User();
                     break;
                     
-                case 7: // Exit
+                case 10: // Exit
                     clearScreen();
 
                     cout << "Thank you for using BookSeek. Goodbye!\n";

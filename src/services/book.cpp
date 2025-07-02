@@ -17,6 +17,10 @@ struct Book {
     char borrowed_from[50];
     bool isWishlist;
     int year;
+    char category[30];       
+    char status[20];         
+    int rating;             // rating 1-5
+    char review[100];        
 };
 
 
@@ -84,6 +88,24 @@ class BookService {
         
         book.year = year;
         cin.ignore();
+        
+        cout << "Enter Category/genre: ";
+        getline(cin, temp);
+        strcpy(book.category, temp.c_str());
+        book.category[sizeof(book.category) - 1] = '\0';
+        
+        strcpy(book.status, "Not Started");
+        book.status[sizeof(book.status) - 1] = '\0';
+        
+        book.rating = 0;
+        strcpy(book.review, "");
+        
+        strcpy(book.lend_to, "");
+        book.isLent = false;
+        strcpy(book.lent_to, "");
+        book.isBorrowed = false;
+        strcpy(book.borrowed_from, "");
+        book.isWishlist = false;
 
         ofstream outFile(filename, ios::binary | ios::app);
         if (!outFile) {
@@ -98,11 +120,15 @@ class BookService {
 
     void viewBooks() {
         Book book;
-        cout << left << setw(10) << "ID"
-            << setw(30) << "Title"
-            << setw(20) << "Author"
-            << "Year\n";
-        cout << "------------------------------------------------------------------------\n";
+        cout << left << setw(5) << "ID"
+            << setw(20) << "Title"
+            << setw(15) << "Author"
+            << setw(5) << "Year"
+            << setw(15) << "Category"
+            << setw(15) << "Status"
+            << setw(8) << "Rating\n";
+           
+        cout << string(100, '-') << endl;
 
         ifstream inFile(filename, ios::binary);  
         if (!inFile) {
@@ -112,10 +138,14 @@ class BookService {
         
         bool found = false;
         while (inFile.read((char*)&book, sizeof(Book))) {
-            cout << left << setw(10) << book.id
-                << setw(30) << book.title
-                << setw(20) << book.author
-                << book.year << endl;
+            cout << left << setw(5) << book.id
+                << setw(20) << book.title
+                << setw(15) << book.author
+                << setw(5) << book.year
+                << setw(15) << book.category
+                << setw(15) << book.status
+                << setw(8) << (book.rating > 0 ? to_string(book.rating) : "-")
+                << endl;
             found = true;
         }
         
@@ -140,7 +170,7 @@ class BookService {
             return;
         }
 
-        cout << "Enter search term (title or author): ";
+        cout << "Enter search term (title, author, or category): ";
         string searchTerm;
         getline(cin, searchTerm);
         string searchTermLower = toLowercase(searchTerm);
@@ -151,26 +181,37 @@ class BookService {
         while (inFile.read((char*)&book, sizeof(Book))) {
             string bookTitle = book.title;
             string bookAuthor = book.author;
+            string bookCategory = book.category;
 
             string bookTitleLower = toLowercase(bookTitle);
             string bookAuthorLower = toLowercase(bookAuthor);
+            string bookCategoryLower = toLowercase(bookCategory);
 
             bool matchFound = bookTitleLower.find(searchTermLower) != string::npos || 
-                              bookAuthorLower.find(searchTermLower) != string::npos;
+                              bookAuthorLower.find(searchTermLower) != string::npos ||
+                              bookCategoryLower.find(searchTermLower) != string::npos;
 
             if (matchFound) {
                 if (!found) {
-                    cout << left << setw(10) << "ID"
-                        << setw(30) << "Title"
-                        << setw(20) << "Author"
-                        << "Year\n";
-                    cout << "------------------------------------------------------------------------\n";
+                    cout << left << setw(5) << "ID"
+                        << setw(20) << "Title"
+                        << setw(15) << "Author"
+                        << setw(5) << "Year"
+                        << setw(15) << "Category"
+                        << setw(15) << "Status"
+                        << setw(8) << "Rating\n";
+                        
+                    cout << string(100, '-') << endl;
                 }
                 
-                cout << left << setw(10) << book.id
-                    << setw(30) << book.title
-                    << setw(20) << book.author
-                    << book.year << endl;
+                cout << left << setw(5) << book.id
+                    << setw(20) << book.title
+                    << setw(15) << book.author
+                    << setw(5) << book.year
+                    << setw(15) << book.category
+                    << setw(15) << book.status
+                    << setw(8) << (book.rating > 0 ? to_string(book.rating) : "-")
+                    << endl;
                     
                 found = true;
             }
@@ -181,6 +222,180 @@ class BookService {
         }
 
         inFile.close();
+    }
+    
+    void filterByCategory() {
+        ifstream inFile(filename, ios::binary);
+        if (!inFile) {
+            cout << "No books found.\n";
+            return;
+        }
+
+        cout << "Enter category to filter by: ";
+        string category;
+        getline(cin, category);
+        string categoryLower = toLowercase(category);
+
+        Book book;
+        bool found = false;
+        
+        while (inFile.read((char*)&book, sizeof(Book))) {
+            string bookCategory = book.category;
+            string bookCategoryLower = toLowercase(bookCategory);
+
+            if (bookCategoryLower.find(categoryLower) != string::npos) {
+                if (!found) {
+                    cout << left << setw(5) << "ID"
+                        << setw(20) << "Title"
+                        << setw(15) << "Author"
+                        << setw(5) << "Year"
+                        << setw(15) << "Category"
+                        << setw(15) << "Status"
+                        << setw(8) << "Rating"
+                        << "Review\n";
+                    cout << string(100, '-') << endl;
+                }
+                
+                cout << left << setw(5) << book.id
+                    << setw(20) << book.title
+                    << setw(15) << book.author
+                    << setw(5) << book.year
+                    << setw(15) << book.category
+                    << setw(15) << book.status
+                    << setw(8) << (book.rating > 0 ? to_string(book.rating) : "-")
+                    << book.review << endl;
+                    
+                found = true;
+            }
+        }
+
+        if (!found) {
+            cout << "No books found in that category.\n";
+        }
+
+        inFile.close();
+    }
+    
+    void updateProgress() {
+        int bookId;
+        cout << "Enter Book ID to update reading status: ";
+        cin >> bookId;
+        cin.ignore();
+        
+        fstream file(filename, ios::in | ios::out | ios::binary);
+        if (!file) {
+            cout << "Error opening file.\n";
+            return;
+        }
+        
+        Book book;
+        bool found = false;
+        
+        while (file.read((char*)&book, sizeof(Book))) {
+            if (book.id == bookId) {
+                found = true;
+                
+                cout << "Current status: " << book.status << "\n";
+                cout << "Available statuses:\n";
+                cout << "1. Not Started\n";
+                cout << "2. Reading\n";
+                cout << "3. On Hold\n";
+                cout << "4. Completed\n";
+                cout << "Enter new status (1-4): ";
+                
+                int statusChoice;
+                cin >> statusChoice;
+                cin.ignore();
+                
+                while (cin.fail() || statusChoice < 1 || statusChoice > 4) {
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                    cout << "Invalid choice! Please enter a number between 1-4: ";
+                    cin >> statusChoice;
+                    cin.ignore();
+                }
+                
+                switch (statusChoice) {
+                    case 1:
+                        strcpy(book.status, "Not Started");
+                        break;
+                    case 2:
+                        strcpy(book.status, "Reading");
+                        break;
+                    case 3:
+                        strcpy(book.status, "On Hold");
+                        break;
+                    case 4:
+                        strcpy(book.status, "Completed");
+                        break;
+                }
+                
+                file.seekp(file.tellg() - static_cast<streamoff>(sizeof(Book)));
+                file.write((char*)&book, sizeof(Book));
+                cout << "Reading status updated successfully.\n";
+                break;
+            }
+        }
+        
+        if (!found) {
+            cout << "Book not found.\n";
+        }
+        
+        file.close();
+    }
+    
+    void addRatingReview() {
+        int bookId;
+        cout << "Enter Book ID to rate and review: ";
+        cin >> bookId;
+        cin.ignore();
+        
+        fstream file(filename, ios::in | ios::out | ios::binary);
+        if (!file) {
+            cout << "Error opening file.\n";
+            return;
+        }
+        
+        Book book;
+        bool found = false;
+        
+        while (file.read((char*)&book, sizeof(Book))) {
+            if (book.id == bookId) {
+                found = true;
+                
+                cout << "Enter rating (1-5): ";
+                int newRating;
+                cin >> newRating;
+                cin.ignore();
+                
+                while (cin.fail() || newRating < 1 || newRating > 5) {
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                    cout << "Invalid rating! Please enter a value between 1-5: ";
+                    cin >> newRating;
+                    cin.ignore();
+                }
+                
+                book.rating = newRating;
+                
+                string reviewText;
+                cout << "Enter review: ";
+                getline(cin, reviewText);
+                strcpy(book.review, reviewText.c_str());
+                book.review[sizeof(book.review) - 1] = '\0';
+                
+                file.seekp(file.tellg() - static_cast<streamoff>(sizeof(Book)));
+                file.write((char*)&book, sizeof(Book));
+                cout << "Rating and review updated successfully.\n";
+                break;
+            }
+        }
+        
+        if (!found) {
+            cout << "Book not found.\n";
+        }
+        
+        file.close();
     }
 
     bool deleteBook() {
