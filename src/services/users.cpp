@@ -22,44 +22,47 @@ class UserService {
             ofstream checkFile(filename, ios::app | ios::binary);
             checkFile.close();
         }
-        
 
         bool addUser(string username, string password) {
-            // Check if username already exists
-            try {
-                getUserByUsername(username.c_str());
-                return false;  
-            } catch (const runtime_error& e) {
-                // Username doesn't exist
+            ifstream checkFile(filename, ios::binary);
+            if (checkFile) {
+                User existingUser;
+                while (checkFile.read((char*)&existingUser, sizeof(User))) {
+                    if (strcmp(existingUser.username, username.c_str()) == 0) {
+                        checkFile.close();
+                        return false;  
+                    }
+                }
+                checkFile.close();
             }
             
-         
+            // next id
             int maxId = 0;
-            fstream file(filename, ios::in | ios::binary);
-            if (file) {
+            ifstream idFile(filename, ios::binary);
+            if (idFile) {
                 User tempUser;
-                while (file.read(reinterpret_cast<char*>(&tempUser), sizeof(User))) {
+                while (idFile.read((char*)&tempUser, sizeof(User))) {
                     if (tempUser.id > maxId) {
                         maxId = tempUser.id;
                     }
                 }
-                file.close();
+                idFile.close();
             }
             
+            // new user
             User user;
             user.id = maxId + 1;
             strcpy(user.username, username.c_str());
             strcpy(user.password, password.c_str());
             user.created_at = time(nullptr);
-            
-            // Write to file
+
             ofstream outFile(filename, ios::app | ios::binary);
             if (!outFile) {
-                cerr << "Failed to open file for writing: " << filename << endl;
+                cout << "Failed to open file for writing: " << filename << endl;
                 return false;
             }
             
-            outFile.write(reinterpret_cast<const char*>(&user), sizeof(User));
+            outFile.write((char*)&user, sizeof(User));
             outFile.close();
             return true;
         }
@@ -71,33 +74,43 @@ class UserService {
             }
             
             User user;
-            while (file.read(reinterpret_cast<char*>(&user), sizeof(User))) {
+            bool found = false;
+            
+            while (file.read((char*)&user, sizeof(User))) {
                 if (strcmp(user.username, username) == 0) {
-                    file.close();
-                    return user;
+                    found = true;
+                    break;
                 }
             }
             
             file.close();
-            throw runtime_error("User not found");
+            
+            if (!found) {
+                throw runtime_error("User not found");
+            }
+            
+            return user;
         }
        
         bool authenticateUser(string username, string password) {
             ifstream file(filename, ios::binary);
             if (!file) {
+                cout << "Could not open users file." << endl;
                 return false;
             }
             
             User user;
-            while (file.read(reinterpret_cast<char*>(&user), sizeof(User))) {
+            bool found = false;
+            
+            while (file.read((char*)&user, sizeof(User))) {
                 if (strcmp(user.username, username.c_str()) == 0 && 
                     strcmp(user.password, password.c_str()) == 0) {
-                    file.close();
-                    return true;
+                    found = true;
+                    break;
                 }
             }
             
             file.close();
-            return false;
+            return found;
         }
 };

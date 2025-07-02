@@ -2,103 +2,16 @@
 #include <string>
 #include <chrono>
 #include <thread>
-
-using namespace std;
-
-// color code
-namespace Color {
-    const string RESET = "\033[0m";
-    const string BLACK = "\033[30m";
-    const string RED = "\033[31m";
-    const string GREEN = "\033[32m";
-    const string YELLOW = "\033[33m";
-    const string BLUE = "\033[34m";
-    const string WHITE = "\033[37m";
-    const string BG_RED = "\033[41m";
-    const string BG_GREEN = "\033[42m";
-    const string BG_YELLOW = "\033[43m";
-    const string BG_BLUE = "\033[44m";
-}
-
-void clearScreen() {
-    cout << "\033[2J\033[1;1H";
-}
-
-enum NotificationType {
-    SUCCESS,
-    ERROR,
-    INFO,
-    WARNING
-};
-
-// show notification
-void showNotification(const string& message, NotificationType type, int displayTime = 3) {
-    // Save cursor position
-    cout << "\033[s";
-    
-    // Move to top of screen
-    cout << "\033[1;1H";
-    
-    // colors and icons based on notification type
-    string prefix, bgColor, textColor;
-    switch (type) {
-        case SUCCESS:
-            bgColor = Color::BG_GREEN;
-            textColor = Color::BLACK;
-            prefix = "✓ SUCCESS: ";
-            break;
-        case ERROR:
-            bgColor = Color::BG_RED;
-
-            prefix = "✗ ERROR: ";
-            break;
-        case INFO:
-            bgColor = Color::BG_BLUE;
-            textColor = Color::WHITE;
-            prefix = "ℹ INFO: ";
-            break;
-        case WARNING:
-            bgColor = Color::BG_YELLOW;
-            textColor = Color::BLACK;
-            prefix = "⚠ WARNING: ";
-            break;
-    }
-    
-    // Calculate notification width for the border
-    int width = message.length() + prefix.length() + 4;
-    
-    // Top border
-    cout << bgColor << textColor;
-    for (int i = 0; i < width; i++) cout << "═";
-    cout << Color::RESET << endl;
-    
-    // Message
-    cout << "  "<< bgColor << textColor << " " << prefix << message << " " << Color::RESET << endl;
-    
-    // Bottom border
-    cout << bgColor << textColor;
-    for (int i = 0; i < width; i++) cout << "═";
-    cout << Color::RESET << endl;
-    
-    // display how many seconds
-    cout.flush();
-    std::this_thread::sleep_for(std::chrono::seconds(displayTime));
-    
-    // Clear notification
-    cout << "\033[1;1H\033[K\n\033[K\n\033[K";
-    
-    cout << "\033[u";
-    cout.flush();
-}
-
-// Include service files
+#include "helper/notification.cpp"
 #include "services/users.cpp"
 #include "services/book.cpp"
 #include "services/wishlist-lend.cpp"
 
-//db name
-const string userFile = "db/users.bin";
-const string bookFile = "db/books.bin";
+using namespace std;
+
+//db path
+const string userFilePath = "db/users.bin";
+const string bookFilePath = "db/books.bin";
 
 void displayMenu() {
     clearScreen();
@@ -123,13 +36,13 @@ void displayLoggedInMenu() {
 }
 
 
-
 int main() {
-    // initialize db
-    UserService db(userFile);
-    BookService book(bookFile);
-    WishlistLendService wishlistLend(bookFile);
+    // db init
+    UserService db(userFilePath);
+    BookService book(bookFilePath);
+    WishlistLendService wishlistLend(bookFilePath);
 
+    
     int choice = 0;
     string username, password, title, author;
     User currentUser;
@@ -178,7 +91,7 @@ int main() {
                     }
                     break;
                     
-                case 3: 
+                case 3: // Exit
                     showNotification("Thank you for using BookSeeks!", INFO, 2);
                     return 0;
                     
@@ -192,17 +105,15 @@ int main() {
             displayLoggedInMenu();
             cin >> choice;
             cin.ignore(); 
-
            
             switch (choice) {
-                case 1: 
-                    // Add book
+                case 1: // Add book
                     clearScreen();
                     if(book.addBook()){
-                         clearScreen();
+                        clearScreen();
                         showNotification("Book added successfully!", SUCCESS);
                     }else{
-                         clearScreen(); 
+                        clearScreen(); 
                         showNotification("Book already exists", ERROR);
                     }
 
@@ -210,6 +121,7 @@ int main() {
                     
                 case 2: // View all books
                     clearScreen();
+
                     cout << "~~~~~~~  Viewing all books  ~~~~~~~\n";
                     book.viewBooks();
                     cout << "\nPress Enter to return to menu...";
@@ -218,6 +130,7 @@ int main() {
                     
                 case 3: // Search book
                     clearScreen();
+
                     cout << "~~~~~~~  Search for a book  ~~~~~~~\n";
                     book.searchBooks();
                     cout << "\nPress Enter to return to menu...";
@@ -226,6 +139,7 @@ int main() {
                     
                 case 4: // Delete book
                     clearScreen();
+
                     cout << "~~~~~~~  Delete a book  ~~~~~~~\n";
                     if(book.deleteBook()){
                         clearScreen();
@@ -239,6 +153,7 @@ int main() {
                     break;
                 case 5: // Wishlist & Lend
                     clearScreen();
+
                     if (wishlistLend.wishlistLendMenu()) {
                         clearScreen();
                         cout << "Thank you for using BookSeek. Goodbye!\n";
@@ -246,21 +161,23 @@ int main() {
                     }
                     break;
                 case 6: // Logout
-                 clearScreen();
+                    clearScreen();
+                 
                     cout << "Logging out...\n";
                     loggedIn = false;
                     currentUser = User();
                     break;
                     
                 case 7: // Exit
-                 clearScreen();
+                    clearScreen();
+
                     cout << "Thank you for using BookSeek. Goodbye!\n";
                     return 0;
                     
                 default:
-                 clearScreen();
-                showNotification("Invalid option selected", WARNING);
-                displayMenu();
+                    clearScreen();
+                    showNotification("Invalid option selected", WARNING);
+                    displayMenu();
             }
         }
     }
