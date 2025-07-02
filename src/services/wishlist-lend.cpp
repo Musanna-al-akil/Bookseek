@@ -196,7 +196,7 @@ class WishlistLendService {
                 return;
             }
 
-            string tempFilename = "../db/temp.bin";
+            string tempFilename = "db/temp.bin";
             ofstream tempFile(tempFilename, ios::binary);
             Book book;
             bool found = false;
@@ -249,7 +249,6 @@ class WishlistLendService {
                     book.isLent = true;
                     found = true;
                     
-                    // fall back one step back and rewrite the book data
                     file.seekp(file.tellg() - static_cast<streamoff>(sizeof(Book)));
                     file.write((char*)&book, sizeof(Book));
                     

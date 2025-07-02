@@ -134,6 +134,9 @@ class BookService {
         
         bool found = false;
         while (inFile.read((char*)&book, sizeof(Book))) {
+            if (book.isWishlist) {
+                continue;
+            }
             cout << left << setw(5) << book.id
                 << setw(20) << book.title
                 << setw(15) << book.author
@@ -406,7 +409,7 @@ class BookService {
         cin >> bookIdToDelete;
         cin.ignore();
 
-        string tempFilename = "../db/temp.bin";
+        string tempFilename = "db/temp.bin";
         ofstream tempFile(tempFilename, ios::binary);
         Book book;
         bool found = false;
