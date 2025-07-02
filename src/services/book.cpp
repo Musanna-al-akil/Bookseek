@@ -25,7 +25,6 @@ class BookService {
         const string filename;
     public:
         BookService(const string& fname) : filename(fname) {
-            // Check if file exists, if not create it
             ofstream checkFile(filename, ios::app | ios::binary);
             checkFile.close();
         }
@@ -33,12 +32,12 @@ class BookService {
     bool addBook() {
         Book book;
         
-        // Get the highest existing ID to auto-increment
+        // next id
         int maxId = 0;
         ifstream idFile(filename, ios::binary);
         if (idFile) {
             Book tempBook;
-            while (idFile.read(reinterpret_cast<char*>(&tempBook), sizeof(Book))) {
+            while (idFile.read((char*)&tempBook, sizeof(Book))) {
                 if (tempBook.id > maxId) {
                     maxId = tempBook.id;
                 }
@@ -51,22 +50,18 @@ class BookService {
         string temp;
         cout << "Enter Book Title: ";
         getline(cin, temp);
-        strncpy(book.title, temp.c_str(), sizeof(book.title));
+        strcpy(book.title, temp.c_str());
         book.title[sizeof(book.title) - 1] = '\0';
 
         cout << "Enter Author Name: ";
         getline(cin, temp);
-        strncpy(book.author, temp.c_str(), sizeof(book.author));
+        strcpy(book.author, temp.c_str());
         book.author[sizeof(book.author) - 1] = '\0';
-        
-        // Check if book already exists
-        string inputTitle = book.title;
-        string inputAuthor = book.author;
         
         ifstream checkFile(filename, ios::binary);
         if (checkFile) {
             Book existingBook;
-            while (checkFile.read(reinterpret_cast<char*>(&existingBook), sizeof(Book))) {
+            while (checkFile.read((char*)&existingBook, sizeof(Book))) {
                 if (strcmp(existingBook.title, book.title) == 0 && 
                     strcmp(existingBook.author, book.author) == 0) {
                     checkFile.close();
@@ -77,7 +72,17 @@ class BookService {
         }
 
         cout << "Enter Year: ";
-        cin >> book.year;
+        int year;
+        cin >> year;
+        
+        while (cin.fail() || year < 1 || year > 9999) {
+            cin.clear(); 
+            cin.ignore(1000, '\n');
+            cout << "Invalid year! Please enter a valid year: ";
+            cin >> year;
+        }
+        
+        book.year = year;
         cin.ignore();
 
         ofstream outFile(filename, ios::binary | ios::app);
@@ -85,7 +90,7 @@ class BookService {
             cout << "Error opening file for writing.\n";
             return false;
         }
-        outFile.write(reinterpret_cast<char*>(&book), sizeof(Book));
+        outFile.write((char*)&book, sizeof(Book));
         outFile.close();
         
         return true;
@@ -104,18 +109,28 @@ class BookService {
             cout << "No books found.\n";
             return;
         }
+        
         bool found = false;
-        while (inFile.read(reinterpret_cast<char*>(&book), sizeof(Book))) {
+        while (inFile.read((char*)&book, sizeof(Book))) {
             cout << left << setw(10) << book.id
                 << setw(30) << book.title
                 << setw(20) << book.author
                 << book.year << endl;
             found = true;
         }
+        
         if (!found)
             cout << "No books found.\n";
 
         inFile.close();
+    }
+
+    string toLowercase(string& str) {
+        string result = str;
+        for (auto & c: result) {
+            c = tolower(c);
+        }
+        return result;
     }
 
     void searchBooks() {
@@ -126,24 +141,24 @@ class BookService {
         }
 
         cout << "Enter search term (title or author): ";
-        string term;
-        getline(cin, term);
+        string searchTerm;
+        getline(cin, searchTerm);
+        string searchTermLower = toLowercase(searchTerm);
 
         Book book;
         bool found = false;
-        while (inFile.read(reinterpret_cast<char*>(&book), sizeof(Book))) {
-            string titleStr(book.title);
-            string authorStr(book.author);
+        
+        while (inFile.read((char*)&book, sizeof(Book))) {
+            string bookTitle = book.title;
+            string bookAuthor = book.author;
 
-            // Convert to lowercase 
-            string titleLower = titleStr;
-            string authorLower = authorStr;
-            string termLower = term;
-            for (auto & c: titleLower) c = tolower(c);
-            for (auto & c: authorLower) c = tolower(c);
-            for (auto & c: termLower) c = tolower(c);
+            string bookTitleLower = toLowercase(bookTitle);
+            string bookAuthorLower = toLowercase(bookAuthor);
 
-            if (titleLower.find(termLower) != string::npos || authorLower.find(termLower) != string::npos) {
+            bool matchFound = bookTitleLower.find(searchTermLower) != string::npos || 
+                              bookAuthorLower.find(searchTermLower) != string::npos;
+
+            if (matchFound) {
                 if (!found) {
                     cout << left << setw(10) << "ID"
                         << setw(30) << "Title"
@@ -151,16 +166,19 @@ class BookService {
                         << "Year\n";
                     cout << "------------------------------------------------------------------------\n";
                 }
+                
                 cout << left << setw(10) << book.id
                     << setw(30) << book.title
                     << setw(20) << book.author
                     << book.year << endl;
+                    
                 found = true;
             }
         }
 
-        if (!found)
+        if (!found) {
             cout << "No books matched your search.\n";
+        }
 
         inFile.close();
     }
@@ -173,8 +191,8 @@ class BookService {
         }
 
         cout << "Enter Book ID to delete: ";
-        int delId;
-        cin >> delId;
+        int bookIdToDelete;
+        cin >> bookIdToDelete;
         cin.ignore();
 
         string tempFilename = "temp.dat";
@@ -182,9 +200,9 @@ class BookService {
         Book book;
         bool found = false;
 
-        while (inFile.read(reinterpret_cast<char*>(&book), sizeof(Book))) {
-            if (book.id != delId) {
-                tempFile.write(reinterpret_cast<char*>(&book), sizeof(Book));
+        while (inFile.read((char*)&book, sizeof(Book))) {
+            if (book.id != bookIdToDelete) {
+                tempFile.write((char*)&book, sizeof(Book));
             } else {
                 found = true;
             }
