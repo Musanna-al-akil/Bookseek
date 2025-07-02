@@ -6,6 +6,7 @@
 #include "services/users.cpp"
 #include "services/book.cpp"
 #include "services/wishlist-lend.cpp"
+#include "services/ai-review-recommendation.cpp"
 
 using namespace std;
 
@@ -33,8 +34,9 @@ void displayLoggedInMenu() {
     cout << "6. Filter books by category\n";
     cout << "7. Update reading status\n";
     cout << "8. Add rating and review\n";
-    cout << "9. Logout\n";
-    cout << "10. Exit\n";
+    cout << "9. AI Book Review\n";
+    cout << "10. Logout\n";
+    cout << "11. Exit\n";
     cout << "Enter your choice: ";
 }
 
@@ -44,6 +46,7 @@ int main() {
     UserService user(userFilePath);
     BookService book(bookFilePath);
     WishlistLendService wishlistLend(bookFilePath);
+    AIReviewRecommendationService aiService;
 
     
     int choice = 0;
@@ -184,7 +187,15 @@ int main() {
                     cout << "\nPress Enter to return to menu...";
                     cin.ignore();
                     break;
-                case 9: // Logout
+                case 9: // Ai recommend and review
+                    clearScreen();
+                    if (aiService.aiReviewMenu()) {
+                        clearScreen();
+                        cout << "Thank you for using BookSeek. Goodbye!\n";
+                        return 0;
+                    }
+                    break;
+                case 10: // Logout
                     clearScreen();
                  
                     cout << "Logging out...\n";
@@ -192,7 +203,7 @@ int main() {
                     currentUser = User();
                     break;
                     
-                case 10: // Exit
+                case 11: // Exit
                     clearScreen();
 
                     cout << "Thank you for using BookSeek. Goodbye!\n";

@@ -88,9 +88,9 @@ cd src && g++ -o Bookseek main.cpp services/users.cpp services/book.cpp
 ### Phase 2: Advanced Book Management
 
 -   [x] Implement search and filter functionality
--   [ ] Add book categorization and tagging
--   [ ] Develop reading progress tracking
--   [ ] Create rating and review system
+-   [x] Add book categorization and tagging
+-   [x] Develop reading progress tracking
+-   [x] Create rating and review system
 
 ### Phase 3: Enhanced Features
 
