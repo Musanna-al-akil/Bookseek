@@ -5,11 +5,11 @@
 
 using namespace std;
 
-size_t WriteCallback(void *contents, size_t size, size_t memory_size, std::string *s) {
+size_t WriteCallback(void *contents, size_t size, size_t memory_size, string *s) {
     size_t newLength = size * memory_size;
     try {
         s->append((char*)contents, newLength);
-    } catch(std::bad_alloc &e) {
+    } catch(bad_alloc &e) {
         return 0;
     }
     return newLength;
@@ -17,7 +17,7 @@ size_t WriteCallback(void *contents, size_t size, size_t memory_size, std::strin
 
 class AIReviewRecommendationService {
     private:
-        std::string api_key;
+        string api_key;
         
     public:
         AIReviewRecommendationService() {
