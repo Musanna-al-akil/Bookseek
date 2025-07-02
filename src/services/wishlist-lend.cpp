@@ -121,7 +121,14 @@ class WishlistLendService {
 
             book.isWishlist = true;
             book.isLent = false;
+            strcpy(book.lent_to, "");
             strcpy(book.lend_to, "");
+            book.isBorrowed = false;
+            strcpy(book.borrowed_from, "");
+            strcpy(book.category, "");
+            strcpy(book.status, "Not Started");
+            book.rating = 0;
+            strcpy(book.review, "");
 
             ofstream saveFile(filename, ios::binary | ios::app);
             if (saveFile.is_open()) {
@@ -146,7 +153,10 @@ class WishlistLendService {
 
             ifstream file(filename, ios::binary);
             if (!file) {
-                showNotification("No books found!", INFO);
+                // showNotification("No books found!", INFO);
+                cout << "No books found!\n";
+                cout << "\nPress Enter to continue...";
+                cin.ignore();
                 return;
             }
             
@@ -186,7 +196,7 @@ class WishlistLendService {
                 return;
             }
 
-            string tempFilename = "../db/temp_wishlist.bin";
+            string tempFilename = "../db/temp.bin";
             ofstream tempFile(tempFilename, ios::binary);
             Book book;
             bool found = false;
@@ -243,7 +253,7 @@ class WishlistLendService {
                     file.seekp(file.tellg() - static_cast<streamoff>(sizeof(Book)));
                     file.write((char*)&book, sizeof(Book));
                     
-                    showNotification("Book '" + string(book.title) + "' lent to " + string(book.lend_to) + " successfully!", SUCCESS);
+                    showNotification("Book '" + string(book.title) + "' lent to " + string(book.lent_to) + " successfully!", SUCCESS);
                     break;
                 }
             }
@@ -278,7 +288,7 @@ class WishlistLendService {
                     cout << left << setw(10) << book.id
                         << setw(25) << book.title
                         << setw(20) << book.author
-                        << setw(20) << book.lend_to
+                        << setw(20) << book.lent_to
                         << book.year << endl;
                     found = true;
                 }

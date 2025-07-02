@@ -41,7 +41,7 @@ void displayLoggedInMenu() {
 
 int main() {
     // db init
-    UserService db(userFilePath);
+    UserService user(userFilePath);
     BookService book(bookFilePath);
     WishlistLendService wishlistLend(bookFilePath);
 
@@ -69,7 +69,7 @@ int main() {
                     getline(cin, username);
                     cout << "Enter password: ";
                     getline(cin, password);
-                    if (db.addUser(username, password)) {
+                    if (user.addUser(username, password)) {
                         showNotification("Account created successfully!", SUCCESS);
                     } else {
                         showNotification("Username already exists", ERROR);
@@ -86,7 +86,7 @@ int main() {
                     cout << "Enter password: ";
                     getline(cin, password);
 
-                    if (db.authenticateUser(username, password)) {
+                    if (user.authenticateUser(username, password)) {
                         showNotification("Login successful! Welcome, " + username, SUCCESS);
                         loggedIn = true;
                     } else {

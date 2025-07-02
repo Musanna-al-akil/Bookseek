@@ -55,12 +55,10 @@ class BookService {
         cout << "Enter Book Title: ";
         getline(cin, temp);
         strcpy(book.title, temp.c_str());
-        book.title[sizeof(book.title) - 1] = '\0';
 
         cout << "Enter Author Name: ";
         getline(cin, temp);
         strcpy(book.author, temp.c_str());
-        book.author[sizeof(book.author) - 1] = '\0';
         
         ifstream checkFile(filename, ios::binary);
         if (checkFile) {
@@ -92,10 +90,8 @@ class BookService {
         cout << "Enter Category/genre: ";
         getline(cin, temp);
         strcpy(book.category, temp.c_str());
-        book.category[sizeof(book.category) - 1] = '\0';
         
         strcpy(book.status, "Not Started");
-        book.status[sizeof(book.status) - 1] = '\0';
         
         book.rating = 0;
         strcpy(book.review, "");
@@ -149,9 +145,9 @@ class BookService {
             found = true;
         }
         
-        if (!found)
+        if (!found) {
             cout << "No books found.\n";
-
+        }
         inFile.close();
     }
 
@@ -410,7 +406,7 @@ class BookService {
         cin >> bookIdToDelete;
         cin.ignore();
 
-        string tempFilename = "temp.dat";
+        string tempFilename = "../db/temp.bin";
         ofstream tempFile(tempFilename, ios::binary);
         Book book;
         bool found = false;
