@@ -34,7 +34,7 @@ void displayLoggedInMenu() {
     cout << "6. Filter books by category\n";
     cout << "7. Update reading status\n";
     cout << "8. Add rating and review\n";
-    cout << "9. AI Book Review\n";
+    cout << "9. AI Book Review and Recommendation\n";
     cout << "10. Logout\n";
     cout << "11. Exit\n";
     cout << "Enter your choice: ";

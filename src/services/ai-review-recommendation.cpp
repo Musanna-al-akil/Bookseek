@@ -5,8 +5,8 @@
 
 using namespace std;
 
-size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *s) {
-    size_t newLength = size * nmemb;
+size_t WriteCallback(void *contents, size_t size, size_t memory_size, std::string *s) {
+    size_t newLength = size * memory_size;
     try {
         s->append((char*)contents, newLength);
     } catch(std::bad_alloc &e) {
@@ -30,7 +30,7 @@ class AIReviewRecommendationService {
             while (true) {
                 clearScreen();
                 cout << "~~~~~~~  AI Book Review & Recommendation  ~~~~~~~\n";
-                cout << "1. Get Book Review\n";
+                cout << "1. Get Book Review by AI\n";
                 cout << "2. Return to main menu\n";
                 cout << "3. Exit Application\n";
                 cout << "Enter your choice: ";
