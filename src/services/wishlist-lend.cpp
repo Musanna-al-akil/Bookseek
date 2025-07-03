@@ -118,6 +118,7 @@ class WishlistLendService {
                 showNotification("This book already exists in your collection!", ERROR);
                 return;
             }
+            book.userId = userId;
 
             book.isWishlist = true;
             book.isLent = false;
@@ -163,7 +164,7 @@ class WishlistLendService {
             Book book;
             bool found = false;
             while (file.read((char*)&book, sizeof(Book))) {
-                if (book.isWishlist) {
+                if (book.isWishlist && book.userId == userId) {
                     cout << left << setw(10) << book.id
                         << setw(30) << book.title
                         << setw(20) << book.author
@@ -202,7 +203,7 @@ class WishlistLendService {
             bool found = false;
 
             while (file.read((char*)&book, sizeof(Book))) {
-                if (book.id == bookIdToDelete && book.isWishlist) {
+                if (book.id == bookIdToDelete && book.isWishlist && book.userId == userId) {
                     found = true;
                     showNotification("Book deleted from wishlist!", SUCCESS);
                 } else {
@@ -240,7 +241,7 @@ class WishlistLendService {
             bool found = false;
 
             while (file.read((char*)&book, sizeof(Book))) {
-                if (book.id == bookId && !book.isLent) {
+                if (book.id == bookId && !book.isLent && book.userId == userId) {
                     cout << "Enter name of person to lend to: ";
                     string lendTo;
                     getline(cin, lendTo);
@@ -283,7 +284,7 @@ class WishlistLendService {
             Book book;
             bool found = false;
             while (file.read((char*)&book, sizeof(Book))) {
-                if (book.isLent) {
+                if (book.isLent && book.userId == userId) {
                     cout << left << setw(10) << book.id
                         << setw(25) << book.title
                         << setw(20) << book.author

@@ -5,6 +5,8 @@
 
 using namespace std;
 
+int userId;
+
 struct User {
     int id;
     char username[64];
@@ -106,6 +108,7 @@ class UserService {
                 if (strcmp(user.username, username.c_str()) == 0 && 
                     strcmp(user.password, password.c_str()) == 0) {
                     found = true;
+                    userId = user.id;
                     break;
                 }
             }

@@ -20,7 +20,8 @@ struct Book {
     char category[30];       
     char status[20];         
     int rating;             // rating 1-5
-    char review[100];        
+    char review[100]; 
+    int userId;       
 };
 
 
@@ -92,6 +93,7 @@ class BookService {
         strcpy(book.category, temp.c_str());
         
         strcpy(book.status, "Not Started");
+        book.userId = userId;
         
         book.rating = 0;
         strcpy(book.review, "");
@@ -119,8 +121,8 @@ class BookService {
         cout << left << setw(5) << "ID"
             << setw(20) << "Title"
             << setw(15) << "Author"
-            << setw(5) << "Year"
-            << setw(15) << "Category"
+            << setw(10) << "Year"
+            << setw(20) << "Category"
             << setw(15) << "Status"
             << setw(8) << "Rating\n";
            
@@ -134,14 +136,14 @@ class BookService {
         
         bool found = false;
         while (inFile.read((char*)&book, sizeof(Book))) {
-            if (book.isWishlist) {
+            if (book.isWishlist || book.userId != userId) {
                 continue;
             }
             cout << left << setw(5) << book.id
                 << setw(20) << book.title
                 << setw(15) << book.author
-                << setw(5) << book.year
-                << setw(15) << book.category
+                << setw(10) << book.year
+                << setw(20) << book.category
                 << setw(15) << book.status
                 << setw(8) << (book.rating > 0 ? to_string(book.rating) : "-")
                 << endl;
@@ -190,7 +192,7 @@ class BookService {
                               bookAuthorLower.find(searchTermLower) != string::npos ||
                               bookCategoryLower.find(searchTermLower) != string::npos;
 
-            if (matchFound) {
+            if (matchFound && book.userId == userId) {
                 if (!found) {
                     cout << left << setw(5) << "ID"
                         << setw(20) << "Title"
@@ -243,7 +245,7 @@ class BookService {
             string bookCategoryLower = toLowercase(bookCategory);
 
             if (bookCategoryLower.find(categoryLower) != string::npos) {
-                if (!found) {
+                if (!found && book.userId == userId) {
                     cout << left << setw(5) << "ID"
                         << setw(20) << "Title"
                         << setw(15) << "Author"
@@ -291,7 +293,7 @@ class BookService {
         bool found = false;
         
         while (file.read((char*)&book, sizeof(Book))) {
-            if (book.id == bookId) {
+            if (book.id == bookId && book.userId == userId) {
                 found = true;
                 
                 cout << "Current status: " << book.status << "\n";
@@ -359,7 +361,7 @@ class BookService {
         bool found = false;
         
         while (file.read((char*)&book, sizeof(Book))) {
-            if (book.id == bookId) {
+            if (book.id == bookId && book.userId == userId) {
                 found = true;
                 
                 cout << "Enter rating (1-5): ";
@@ -415,7 +417,7 @@ class BookService {
         bool found = false;
 
         while (inFile.read((char*)&book, sizeof(Book))) {
-            if (book.id != bookIdToDelete) {
+            if (book.id != bookIdToDelete && book.userId == userId) {
                 tempFile.write((char*)&book, sizeof(Book));
             } else {
                 found = true;

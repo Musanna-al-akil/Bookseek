@@ -200,6 +200,7 @@ int main() {
                  
                     cout << "Logging out...\n";
                     loggedIn = false;
+                    userId = -1;
                     currentUser = User();
                     break;
                     
