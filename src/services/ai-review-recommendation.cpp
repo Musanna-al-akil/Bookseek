@@ -10,9 +10,10 @@ using json = nlohmann::json;
 class AIReviewRecommendationService {
     private:
         string api_key;
+        const string filename;
         
     public:
-        AIReviewRecommendationService() {
+        AIReviewRecommendationService(const string& fname):filename(fname) {
             api_key = "AIzaSyA3qReayf1FLyxH3nihpNoVSGoyA0PI31g";
         }
         
@@ -23,8 +24,9 @@ class AIReviewRecommendationService {
                 clearScreen();
                 cout << "~~~~~~~  AI Book Review & Recommendation  ~~~~~~~\n";
                 cout << "1. Get Book Review by AI\n";
-                cout << "2. Return to main menu\n";
-                cout << "3. Exit Application\n";
+                cout << "2. Get Book Recommendations based on your last 5 books by AI\n";
+                cout << "3. Return to main menu\n";
+                cout << "4. Exit Application\n";
                 cout << "Enter your choice: ";
                 
                 cin >> choice;
@@ -35,8 +37,11 @@ class AIReviewRecommendationService {
                         getBookReview();
                         break;
                     case 2:
-                        return false; // main menu
+                        AiRecommendation();
+                        break;
                     case 3:
+                        return false; // main menu
+                    case 4:
                         return true;  // Exit application
                     default:
                         clearScreen();
@@ -89,6 +94,62 @@ class AIReviewRecommendationService {
             cout << "\nPress Enter to continue...";
             cin.ignore();
         }
+         void AiRecommendation() {
+            clearScreen();
+            cout << "~~~~~~~  AI Book Recommendation  ~~~~~~~\n";
+
+            vector<Book> recentBooks;
+            ifstream inFile(filename, ios::binary);
+            if (!inFile) {
+                showNotification("No books found in your collection. Add some books first.", WARNING);
+                return;
+            }
+
+            Book book;
+            while (inFile.read((char*)&book, sizeof(Book))) {
+                if (book.userId == userId) {
+                    recentBooks.push_back(book);
+                }
+            }
+            
+            if (recentBooks.empty()) {
+                clearScreen();
+                showNotification("No books found in your collection. Add some books first.", WARNING);
+                cout << "\nPress Enter to continue...";
+                cin.ignore();
+                return;
+            }
+            
+            // Create a prompt based on recent books
+            string prompt = "Based on the following books I've read:\n";
+            for (const auto& book : recentBooks) {
+                prompt +=  book.title;
+                prompt += " , ";
+            }
+            prompt += "\nPlease recommend 5 different books that I might enjoy. the first line will be 'your last five books are:'(last five books). based on the last five books recommend 5 different books that user might enjoy. Try to recommend books that are similar category user read before and also try to give users new category of books so user can explore new books. For each recommendation, include:\n";
+            prompt += "1. Book title:\n2. Author:\n3. description: (1 sentence)\n4. ratting: (rating out of 10)\n5. category: (category of the book) \n";
+            prompt += "ignore: don't include any ** in output";
+            
+            cout << "\nGenerating personalized book recommendations from last 5 books...\n";
+            
+            string recommendations = callGeminiAPI(prompt);
+            
+            if (!recommendations.empty()) {
+                clearScreen();
+                cout << "~~~~~~~  AI Book Recommendations  ~~~~~~~\n";
+                cout << "Based on your last 5 books reading history, here are some books you might enjoy:\n\n";
+                cout << "========================================\n";
+                cout << recommendations << "\n";
+                cout << "========================================\n";
+            } else {
+                clearScreen();
+                showNotification("Failed to get book recommendations. Please try again.", ERROR);
+            }
+            
+            cout << "\nPress Enter to continue...";
+            cin.ignore();
+        }
+        
         
     private:
         string callGeminiAPI(const string& prompt) {

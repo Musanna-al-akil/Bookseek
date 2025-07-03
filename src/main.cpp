@@ -46,7 +46,7 @@ int main() {
     UserService user(userFilePath);
     BookService book(bookFilePath);
     WishlistLendService wishlistLend(bookFilePath);
-    AIReviewRecommendationService aiService;
+    AIReviewRecommendationService aiService(bookFilePath);
 
     
     int choice = 0;
