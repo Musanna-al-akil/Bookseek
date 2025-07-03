@@ -196,16 +196,53 @@ class WishlistLendService {
                 showNotification("No books found!", ERROR);
                 return;
             }
-
+            
+            Book bookToDelete;
+            bool bookFound = false;
+            
+            while (file.read((char*)&bookToDelete, sizeof(Book))) {
+                if (bookToDelete.id == bookIdToDelete && bookToDelete.isWishlist && bookToDelete.userId == userId) {
+                    bookFound = true;
+                    break;
+                }
+            }
+            
+            if (!bookFound) {
+                file.close();
+                showNotification("Book not found in wishlist!", ERROR);
+                return;
+            }
+            
+            // confirm
+            clearScreen();
+            cout << "~~~~~~~  Confirm Deletion  ~~~~~~~\n";
+            cout << "Book details:\n";
+            cout << "ID: " << bookToDelete.id << "\n";
+            cout << "Title: " << bookToDelete.title << "\n";
+            cout << "Author: " << bookToDelete.author << "\n\n";
+            
+            cout << "Are you sure you want to remove this book from your wishlist? (y/n): ";
+            char confirm;
+            cin >> confirm;
+            cin.ignore();
+            
+            if (tolower(confirm) != 'y') {
+                clearScreen();
+                showNotification("Deletion canceled.", INFO);
+                file.close();
+                return;
+            }
+            /delete
             string tempFilename = "db/temp.bin";
             ofstream tempFile(tempFilename, ios::binary);
             Book book;
             bool found = false;
 
+            file.clear();
+            file.seekg(0, ios::beg);
             while (file.read((char*)&book, sizeof(Book))) {
                 if (book.id == bookIdToDelete && book.isWishlist && book.userId == userId) {
                     found = true;
-                    showNotification("Book deleted from wishlist!", SUCCESS);
                 } else {
                     tempFile.write((char*)&book, sizeof(Book));
                 }
@@ -217,6 +254,8 @@ class WishlistLendService {
             if (found) {
                 remove(filename.c_str());
                 rename(tempFilename.c_str(), filename.c_str());
+                clearScreen();
+                showNotification("Book deleted from wishlist!", SUCCESS);
             } else {
                 remove(tempFilename.c_str());
                 showNotification("Book not found in wishlist!", ERROR);

@@ -411,11 +411,50 @@ class BookService {
         cin >> bookIdToDelete;
         cin.ignore();
 
+        Book bookToDelete;
+        bool bookFound = false;
+        
+        inFile.seekg(0, ios::beg);
+        while (inFile.read((char*)&bookToDelete, sizeof(Book))) {
+            if (bookToDelete.id == bookIdToDelete && bookToDelete.userId == userId) {
+                bookFound = true;
+                break;
+            }
+        }
+        
+        if (!bookFound) {
+            cout << "Book not found.\n";
+            inFile.close();
+            return false;
+        }
+        
+        // confirmation
+        clearScreen();
+        cout << "~~~~~~~  Confirm Deletion  ~~~~~~~\n";
+        cout << "\nBook details:\n";
+        cout << "ID: " << bookToDelete.id << "\n";
+        cout << "Title: " << bookToDelete.title << "\n";
+        cout << "Author: " << bookToDelete.author << "\n\n";
+        
+        cout << "Are you sure you want to delete this book? (y/n): ";
+        char confirm;
+        cin >> confirm;
+        cin.ignore();
+        
+        if (tolower(confirm) != 'y') {
+            clearScreen();
+            showNotification("Deletion canceled.", INFO);
+            inFile.close();
+            return false;
+        }
+        // delete
         string tempFilename = "db/temp.bin";
         ofstream tempFile(tempFilename, ios::binary);
         Book book;
         bool found = false;
 
+        inFile.clear();
+        inFile.seekg(0, ios::beg);
         while (inFile.read((char*)&book, sizeof(Book))) {
             if (book.id != bookIdToDelete && book.userId == userId) {
                 tempFile.write((char*)&book, sizeof(Book));

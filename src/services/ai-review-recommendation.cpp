@@ -120,7 +120,6 @@ class AIReviewRecommendationService {
                 return;
             }
             
-            // Create a prompt based on recent books
             string prompt = "Based on the following books I've read:\n";
             for (const auto& book : recentBooks) {
                 prompt +=  book.title;
