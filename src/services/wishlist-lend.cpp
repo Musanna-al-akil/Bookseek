@@ -232,7 +232,7 @@ class WishlistLendService {
                 file.close();
                 return;
             }
-            /delete
+            // delete
             string tempFilename = "db/temp.bin";
             ofstream tempFile(tempFilename, ios::binary);
             Book book;
@@ -257,6 +257,7 @@ class WishlistLendService {
                 clearScreen();
                 showNotification("Book deleted from wishlist!", SUCCESS);
             } else {
+                clearScreen();
                 remove(tempFilename.c_str());
                 showNotification("Book not found in wishlist!", ERROR);
             }

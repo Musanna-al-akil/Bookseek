@@ -399,11 +399,12 @@ class BookService {
         file.close();
     }
 
-    bool deleteBook() {
+    void deleteBook() {
         ifstream inFile(filename, ios::binary);
         if (!inFile) {
-            cout << "No books found.\n";
-            return false;
+            clearScreen();
+            showNotification("No books found!", ERROR);
+            return;
         }
 
         cout << "Enter Book ID to delete: ";
@@ -423,9 +424,10 @@ class BookService {
         }
         
         if (!bookFound) {
-            cout << "Book not found.\n";
+            clearScreen();
+            showNotification("No books found!", ERROR);
             inFile.close();
-            return false;
+            return;
         }
         
         // confirmation
@@ -445,7 +447,7 @@ class BookService {
             clearScreen();
             showNotification("Deletion canceled.", INFO);
             inFile.close();
-            return false;
+            return;
         }
         // delete
         string tempFilename = "db/temp.bin";
@@ -469,10 +471,13 @@ class BookService {
         if (found) {
             remove(filename.c_str());
             rename(tempFilename.c_str(), filename.c_str());
-            return true;
+            clearScreen();
+            showNotification("Book deleted successfully!", SUCCESS);
         } else {
             remove(tempFilename.c_str());
-            return false;
+            clearScreen();
+             showNotification("Book not found in wishlist!", ERROR);
+            // return false;
         }
     }
 };
