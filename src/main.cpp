@@ -148,15 +148,6 @@ int main() {
 
                     cout << "~~~~~~~  Delete a book  ~~~~~~~\n";
                     book.deleteBook();
-                    // if(book.deleteBook()){
-                    //     clearScreen();
-                    //     showNotification("Book deleted successfully!", SUCCESS);
-                    //     displayLoggedInMenu();
-                    // }else{
-                    //     clearScreen();
-                    //     showNotification("Book not found", ERROR);
-                    //     displayLoggedInMenu();
-                    // }
                     break;
                 case 5: // Wishlist & Lend
                     clearScreen();

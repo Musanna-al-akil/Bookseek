@@ -33,13 +33,11 @@ enum NotificationType {
 
 // show notification
 void showNotification(const string& message, NotificationType type, int displayTime = 2) {
-    // Save cursor position
+
     cout << "\033[s";
     
-    // Move to top of screen
     cout << "\033[1;1H";
     
-    // colors and icons based on notification type
     string prefix, bgColor, textColor;
     switch (type) {
         case SUCCESS:
@@ -64,27 +62,21 @@ void showNotification(const string& message, NotificationType type, int displayT
             break;
     }
     
-    // Calculate notification width for the border
     int width = message.length() + prefix.length() + 4;
     
-    // Top border
     cout << bgColor << textColor;
     for (int i = 0; i < width; i++) cout << "═";
     cout << Color::RESET << endl;
     
-    // Message
     cout << "  "<< bgColor << textColor << " " << prefix << message << " " << Color::RESET << endl;
     
-    // Bottom border
     cout << bgColor << textColor;
     for (int i = 0; i < width; i++) cout << "═";
     cout << Color::RESET << endl;
     
-    // display how many seconds
     cout.flush();
     this_thread::sleep_for(chrono::seconds(displayTime));
     
-    // Clear notification
     cout << "\033[1;1H\033[K\n\033[K\n\033[K";
     
     cout << "\033[u";

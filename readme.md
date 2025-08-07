@@ -7,7 +7,7 @@ BookSeeks is a command-line interface (CLI) based personal books management syst
 ## Run this code
 
 ```shell
-cd src && g++ -o Bookseek main.cpp services/users.cpp services/book.cpp
+g++ main.cpp -I/opt/homebrew/include -L/opt/homebrew/lib -o Bookseek -std=c++17 -lcpr
 ```
 
 ```shell
